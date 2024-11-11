@@ -124,3 +124,108 @@ void Add_New_customer()
     fclose(fptr1);
 }
 //dushyants code starts from here
+void edit()
+{
+    char id[15], name[50], mobile[12], type[10], addr[50];
+    int choice, flag ;
+    struct customer data;
+    int count = 0;
+    printf("Enter Customer ID: ");
+    scanf(" %[^\n]",id);
+    printf("Enter choice, What you want to edit: \n");
+    printf("1. Name\n2. ID\n3. Mobile Number\n4. Animal Type\n5. Address\n");
+    scanf("%d",&choice);
+    FILE *mfptr = fopen("dairybook.csv","r");
+    FILE *tfptr = fopen("temp.csv","w");
+    if(tfptr == NULL)
+    {
+        printf("File not opened\n");
+        exit(0);
+    }
+    fscanf(mfptr,"%d\n",&count);
+    // printf("%d\n",count);
+    fprintf(tfptr,"%d\n",count);
+    for(int i=0; i<count; i++)
+    {
+        fscanf(mfptr," %[^,], %[^,], %[^,], %[^,], %[^,], %f\n",data.name,data.id,data.mob, data.type, data.adr, &data.t_milk);
+        if( strcmp(data.id,id) == 0)
+        {
+            flag = 0;
+            switch(choice)
+            {
+                case 1: printf("Enter Name to be Changed: ");
+                    scanf(" %[^\n]",name);
+                    strcpy(data.name,name);
+                    break;
+                case 2: printf("Enter ID to be changed: ");
+                    scanf(" %[^\n]",id);
+                    strcpy(data.id,id);
+                    break;
+                case 3: printf("Enter Mobile Number to be Changed: ");
+                    scanf(" %[^\n]",mobile);
+                    strcpy(data.mob,mobile);
+                    break;
+                case 4: printf("Enter Animale type to be changed: ");
+                    scanf(" %[^\n]",type);
+                    strcpy(data.type,type);
+                    break;
+                case 5: printf("Enter address to be changed: ");
+                    scanf(" %[^\n]",addr);
+                    strcpy(data.adr,addr);
+                    break;
+                default: printf("Enter valid choice: ");
+                break;
+            }
+        }
+        fprintf(tfptr,"%s,%s,%s,%s,%s,%f\n",data.name,data.id,data.mob,data.type,data.adr, data.t_milk);
+    }
+    if(flag == 0)
+    {
+        printf("Customer data Edited Successfullly...!\n");
+    }
+    else
+    printf("Customer NOT Found....!\n");
+    fclose(mfptr);
+    fclose(tfptr);
+
+    mfptr = fopen("dairybook.csv","w");
+    tfptr = fopen("temp.csv","r");
+    Copy_files(mfptr, tfptr);
+    fclose(mfptr);
+    fclose(tfptr);
+}
+
+void add_milk()
+{
+    struct customer data; 
+    int count = 0;
+    char ID[15];
+    FILE *mfptr = fopen("dairybook.csv","r");
+    FILE *tfptr = fopen("temp.csv","w");
+    printf("---------ADD MILK---------\n");
+    printf("Enter the Customer ID\n");
+    scanf(" %[^\n]",ID);
+    
+    float milk;
+    printf("Enter milk: ");
+    scanf("%f",&milk);
+    fscanf(mfptr,"%d",&count);
+    fprintf(tfptr,"%d\n",count);
+    for(int i = 0; i<count ; i++)
+    {
+        fscanf(mfptr," %[^,], %[^,], %[^,], %[^,], %[^,], %f\n",data.name, data.id, data.mob, data.type, data.adr, &data.t_milk);
+        if(strcmp(data.id,ID) == 0)
+        {
+            data.t_milk += milk;
+        }
+        fprintf(tfptr, "%s,%s,%s,%s,%s,%f\n",data.name, data.id, data.mob, data.type, data.adr, data.t_milk);
+    }
+    fclose(mfptr);
+    fclose(tfptr);
+    
+    mfptr = fopen("dairybook.csv","w");
+    tfptr = fopen("temp.csv","r");
+    Copy_files(mfptr,tfptr);
+    fclose(mfptr);
+    fclose(tfptr);
+}
